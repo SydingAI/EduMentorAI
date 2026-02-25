@@ -1,0 +1,90 @@
+{
+  "info": {
+    "_postman_id": "edumentorai-full",
+    "name": "EduMentorAI Complete",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Test DB Connection",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {"raw":"http://127.0.0.1:8000/test","protocol":"http","host":["127.0.0.1"],"port":"8000","path":["test"]}
+      }
+    },
+    {
+      "name": "Register User",
+      "request": {
+        "method": "POST",
+        "header":[{"key":"Content-Type","value":"application/json"}],
+        "body":{"mode":"raw","raw":"{\n  \"name\": \"John Doe\",\n  \"email\": \"student@example.com\",\n  \"password\": \"password123\",\n  \"role\": \"student\"\n}"},
+        "url":{"raw":"http://127.0.0.1:8000/register","protocol":"http","host":["127.0.0.1"],"port":"8000","path":["register"]}
+      }
+    },
+    {
+      "name": "Login User",
+      "request": {
+        "method": "POST",
+        "header":[{"key":"Content-Type","value":"application/json"}],
+        "body":{"mode":"raw","raw":"{\n  \"email\": \"student@example.com\",\n  \"password\": \"password123\"\n}"},
+        "url":{"raw":"http://127.0.0.1:8000/login","protocol":"http","host":["127.0.0.1"],"port":"8000","path":["login"]}
+      }
+    },
+    {
+      "name": "Student Dashboard",
+      "request":{"method":"GET","header":[{"key":"Authorization","value":"Bearer {{JWT_TOKEN}}"}],"url":{"raw":"http://127.0.0.1:8000/student/dashboard","protocol":"http","host":["127.0.0.1"],"port":"8000","path":["student","dashboard"]}}
+    },
+    {
+      "name": "Lecturer Dashboard",
+      "request":{"method":"GET","header":[{"key":"Authorization","value":"Bearer {{JWT_TOKEN}}"}],"url":{"raw":"http://127.0.0.1:8000/lecturer/dashboard","protocol":"http","host":["127.0.0.1"],"port":"8000","path":["lecturer","dashboard"]}}
+    },
+    {
+      "name": "Create Lesson (Lecturer)",
+      "request":{
+        "method":"POST",
+        "header":[{"key":"Content-Type","value":"application/json"},{"key":"Authorization","value":"Bearer {{JWT_TOKEN}}"}],
+        "body":{"mode":"raw","raw":"{\n  \"title\": \"Classroom Management\",\n  \"content\": \"Techniques to handle a class effectively.\"\n}"},
+        "url":{"raw":"http://127.0.0.1:8000/lecturer/create_lesson","protocol":"http","host":["127.0.0.1"],"port":"8000","path":["lecturer","create_lesson"]}
+      }
+    },
+    {
+      "name": "View Lessons (Student)",
+      "request":{"method":"GET","header":[{"key":"Authorization","value":"Bearer {{JWT_TOKEN}}"}],"url":{"raw":"http://127.0.0.1:8000/student/lessons","protocol":"http","host":["127.0.0.1"],"port":"8000","path":["student","lessons"]}}
+    },
+    {
+      "name": "AI Suggest Lesson (Lecturer)",
+      "request":{"method":"GET","header":[{"key":"Authorization","value":"Bearer {{JWT_TOKEN}}"}],"url":{"raw":"http://127.0.0.1:8000/lecturer/ai/suggest_lesson?topic=Classroom Management","protocol":"http","host":["127.0.0.1"],"port":"8000","path":["lecturer","ai","suggest_lesson"],"query":[{"key":"topic","value":"Classroom Management"}]}}
+    },
+    {
+      "name": "AI Auto Feedback (Student)",
+      "request":{
+        "method":"POST",
+        "header":[{"key":"Authorization","value":"Bearer {{JWT_TOKEN}}"},{"key":"Content-Type","value":"application/json"}],
+        "body":{"mode":"raw","raw":"{\n  \"submission_text\": \"My essay on classroom management...\"\n}"},
+        "url":{"raw":"http://127.0.0.1:8000/student/ai/feedback","protocol":"http","host":["127.0.0.1"],"port":"8000","path":["student","ai","feedback"]}
+      }
+    },
+    {
+      "name": "AI Generate Quiz (Lecturer)",
+      "request":{
+        "method":"GET",
+        "header":[{"key":"Authorization","value":"Bearer {{JWT_TOKEN}}"}],
+        "url":{"raw":"http://127.0.0.1:8000/lecturer/ai/quiz?topic=Classroom Management&num_questions=5","protocol":"http","host":["127.0.0.1"],"port":"8000","path":["lecturer","ai","quiz"],"query":[{"key":"topic","value":"Classroom Management"},{"key":"num_questions","value":"5"}]}
+      }
+    },
+    {
+      "name": "Admin Dashboard",
+      "request":{"method":"GET","header":[{"key":"Authorization","value":"Bearer {{JWT_TOKEN}}"}],"url":{"raw":"http://127.0.0.1:8000/admin/dashboard","protocol":"http","host":["127.0.0.1"],"port":"8000","path":["admin","dashboard"]}}
+    },
+    {
+      "name": "Admin Reports",
+      "request":{"method":"GET","header":[{"key":"Authorization","value":"Bearer {{JWT_TOKEN}}"}],"url":{"raw":"http://127.0.0.1:8000/admin/reports","protocol":"http","host":["127.0.0.1"],"port":"8000","path":["admin","reports"]}}
+    },
+    {
+      "name": "Ministry Dashboard",
+      "request":{"method":"GET","header":[{"key":"Authorization","value":"Bearer {{JWT_TOKEN}}"}],"url":{"raw":"http://127.0.0.1:8000/ministry/dashboard","protocol":"http","host":["127.0.0.1"],"port":"8000","path":["ministry","dashboard"]}}
+    }
+  ],
+  "variable":[{"key":"JWT_TOKEN","value":""}]
+}
