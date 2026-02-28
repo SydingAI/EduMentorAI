@@ -1,27 +1,11 @@
+import os
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pymongo import MongoClient
-from dotenv import load_dotenv
-import os
-from ai_service import generate_lesson, generate_quiz, generate_feedback
+from openai import OpenAI
 
-# Load environment variables
-load_dotenv()
+app = FastAPI()
 
-app = FastAPI(title="EduMentorAI")
-
-# MongoDB Connection
-MONGO_URI = os.getenv("MONGO_URI")
-
-if not MONGO_URI:
-    raise Exception("MONGO_URI is not set")
-
-client = MongoClient(MONGO_URI)
-
-# ✅ Explicitly select database (FIX FOR RENDER)
-db = client["edumentorai"]
-
-# CORS
+# Allow frontend requests
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -30,26 +14,28 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Initialize OpenAI client
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
 @app.get("/")
 def home():
-    return {"message": "EduMentorAI is live 🚀"}
-
-@app.get("/test")
-def test():
-    return {"message": "Backend working perfectly 🔥"}
+    return {"message": "EduMentorAI Backend Running 🚀"}
 
 @app.get("/ai/lesson")
-def ai_lesson(topic: str):
-    content = generate_lesson(topic)
-    return {"lesson": content}
+async def generate_lesson(topic: str):
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": "You are a professional teacher creating structured lessons."},
+                {"role": "user", "content": f"Create a structured lesson about {topic} with introduction, explanation, examples and short quiz."}
+            ],
+            temperature=0.7,
+        )
 
-@app.get("/ai/quiz")
-def ai_quiz(topic: str, num_questions: int = 5):
-    content = generate_quiz(topic, num_questions)
-    return {"quiz": content}
+        lesson = response.choices[0].message.content
 
-@app.post("/ai/feedback")
-def ai_feedback(data: dict):
-    text = data.get("text")
-    content = generate_feedback(text)
-    return {"feedback": content}
+        return {"lesson": lesson}
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
